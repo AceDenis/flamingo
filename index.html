@@ -3,349 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Date Difference Calculator</title>
+    <title>Financial Calculators</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Date Difference Calculator</h1>
-    <label for="startDate">Start Date (YYYY-MM-DD): </label>
-    <input type="text" id="startDate">
-    <br>
-    <label for="endDate">End Date (YYYY-MM-DD): </label>
-    <input type="text" id="endDate">
-    <br>
-    <label for="Basic">Basic pay: </label>
-    <input type="number" id="basicpay">
-    <br>
-    <label for="Additional pay">Additional pay: </label>
-    <input type="number" id="additionalpay">
-    <br>
-    <button onclick="calculateDateDifference()">Calculate</button>
-    <br>
-    <div id="result"></div>
 
-    <!-------------------------------PAYE CALCULATOR---------------------------------->
+    <div class="container">
+        <h1>Date Difference Calculator</h1>
+        <label for="startDate">Start Date (YYYY-MM-DD): </label>
+        <input type="date" id="startDate">
+        <br>
+        <label for="endDate">End Date (YYYY-MM-DD): </label>
+        <input type="date" id="endDate">
+        <br>
+        <label for="Basic">Basic pay: </label>
+        <input type="number" id="basicpay">
+        <br>
+        <label for="Additional pay">Additional pay: </label>
+        <input type="number" id="additionalpay">
+        <br>
+        <button onclick="calculateDateDifference()">Calculate</button>
+        <br>
+        <div id="result"></div>
 
-    <h1>PAYE Calculator (KRA 2023)</h1>
+        <hr>
 
-    <label for="Basic3">Basic pay: </label>
-    <input type="number" id="basicpay3">
-    <br>
-    <label for="House_allowance">House Allowance: </label>
-    <input type="number" id="house_allowance">
-    <br>
-    <button onclick="calculatepaye()">Calculate</button>
-    <br>
-    <div id="totalpaye"></div>
+        <h1>PAYE Calculator (KRA 2023)</h1>
+        <label for="Basic3">Basic pay: </label>
+        <input type="number" id="basicpay3">
+        <br>
+        <label for="House_allowance">House Allowance: </label>
+        <input type="number" id="house_allowance">
+        <br>
+        <button onclick="calculatepaye()">Calculate</button>
+        <br>
+        <div id="totalpaye"></div>
 
-    <!-------------------------------LOAN CALCULATOR---------------------------------->
+        <hr>
 
-    <h1>Loan Calculator</h1>
-
-    <label for="principle">Principle: </label>
-    <input type="number" id="principle">
-    <br>
-    <label for="payment_period">Payment Peroid (Months): </label>
-    <input type="number" id="payment_period">
-    <br>
-    <label for="interest">interest Rate: </label>
-    <input type="number" id="interest">
-    <br>
-    <button onclick="loancalculator()">Calculate</button>
-    <br>
-    <div id="loanspecs"></div>
-
-    <!-------------------------------LOAN LIMIT CALCULATOR---------------------------------->
-
-    <h1>Loan Limit Calculator</h1>
-
-    <label for="gross_pay">Gross Pay: </label>
-    <input type="number" id="gross_pay">
-    <br>
-    <label for="total_deductions">Total Deductions: </label>
-    <input type="number" id="total_deductions">
-    <br>
-    <label for="amount">Loan Amount: </label>
-    <input type="number" id="amount">
-    <br>
-    <label for="interest4">Interest rate: </label>
-    <input type="number" id="interest4">
-    <br>
-    <button onclick="checkLoanLimit()">Calculate</button>
-    <br>
-    <div id="loanlimit"></div>
-
-    <script>
-        function calculateDateDifference() {
-            let startDateInput = document.getElementById('startDate').value;
-            let endDateInput = document.getElementById('endDate').value;
-
-            let basicpayInput = parseFloat(document.getElementById('basicpay').value);
-            let additionalpayInput = parseFloat(document.getElementById('additionalpay').value);
-
-            let sumpay = basicpayInput + additionalpayInput;
-            console.log(sumpay);
-
-            let startDate = new Date(startDateInput);
-            let endDate = new Date(endDateInput);
-
-            let yearsDiff = endDate.getFullYear() - startDate.getFullYear();
-            let monthsDiff = endDate.getMonth() - startDate.getMonth();
-            let daysDiff = endDate.getDate() - startDate.getDate();
-
-            if (daysDiff < 0) {
-                monthsDiff--;
-                daysDiff += new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
-            }
-
-            if (monthsDiff < 0) {
-                yearsDiff--;
-                monthsDiff += 12;
-            }
-
-            let totalMonths = yearsDiff * 12 + monthsDiff;
-
-            let lumpsumPension = Math.min(totalMonths, 400) * sumpay * 0.15;
-/*----------------------------------------------------------------------------------*/
-            function calculateTax(income) {
-                let tax = 0;
-                if (income > 600000) {
-                    tax += Math.min(400000, income - 600000) * 0.1;
-                }
-                if (income > 1000000) {
-                    tax += Math.min(400000, income - 1000000) * 0.15;
-                }
-                if (income > 1400000) {
-                    tax += Math.min(400000, income - 1400000) * 0.2;
-                }
-                if (income > 1800000) {
-                    tax += Math.min(400000, income - 1800000) * 0.25;
-                }
-                if (income > 2200000) {
-                    tax += (income - 2200000) * 0.3;
-                }
-                return tax;
-            }
-
-            let income = parseFloat(lumpsumPension);
-            let taxAmount = calculateTax(income);
-            let payout = lumpsumPension - taxAmount;
-            console.log("Tax amount: ", taxAmount);
-
-/*----------------------------------------------------------------------------------*/
-
-            let monthlyPension = Math.min(totalMonths, 400) * sumpay * 0.001875;
-/*----------------------------------------------------------------------------------*/
-            function calculateTax2(income2) {
-                let tax2 = 0;
-                if (income2 > 40000) {
-                    tax2 += (income2 - 40000) * 0.1;
-                }
-                return tax2;
-            
-            }
-
-            let income2 = parseFloat(monthlyPension);
-            let taxAmount2 = calculateTax2(income2);
-            let payout2 = monthlyPension - taxAmount2;
-            console.log("Tax amount: ", taxAmount2);
-
-/*----------------------------------------------------------------------------------*/
-            
-            let result = "Time Difference:<br>" +
-                         "Years: " + yearsDiff + "<br>" +
-                         "Months: " + monthsDiff + "<br>" +
-                         "Days: " + daysDiff + "<br>" +
-                         "Total months: " + totalMonths + "<br>" +
-                         "<br>" +
-                         "Lumpsum Pension : " + lumpsumPension.toLocaleString() + "<br>" +
-                         "Tax on Lumpsum Pension : " + taxAmount.toLocaleString() + "<br>" +
-                         "Total payout Lumpsum Pension : " + payout.toLocaleString() + "<br>" +
-                         "<br>" +
-                         "Monthly Pension : " + monthlyPension.toLocaleString() + "<br>" +
-                         "Tax on Monthly Pension : " + taxAmount2.toLocaleString() + "<br>" +
-                         "Total payout Monthly Pension : " + payout2.toLocaleString() + "<br>";
-
-            document.getElementById('result').innerHTML = result;
-        }
-
-        function calculatepaye() {
-            let basicpay3 = parseFloat(document.getElementById('basicpay3').value);
-            let house_allowance = parseFloat(document.getElementById('house_allowance').value);
-
-            let income3 = basicpay3 + house_allowance;
-            console.log(income3);
+        <h1>Loan Calculator</h1>
+        <label for="principle">Principal: </label>
+        <input type="number" id="principle">
+        <br>
+        <label for="payment_period">Payment Period (Months): </label>
+        <input type="number" id="payment_period">
+        <br>
+        <label for="interest">Interest Rate: </label>
+        <input type="number" id="interest">
+        <br>
+        <button  onclick="loancalculator()">Calculate</button>
+        <br>
+        <div id="loanspecs"></div>
+        <button id="toggleTableBtn" style="display: none;" onclick="toggleAmortizationTable()">Show Amortization Table</button>
+        <div id="amortizationTable" style="display: none;"></div>
 
 
-            function calculatePayeTax(income3) {
-                let tax = 0;
-                if (income3 > 24000) {
-                    tax += Math.min(8333, income3 - 24000) * 0.25;
-                }
-                if (income3 > 32333) {
-                    tax += Math.min(467667, income3 - 32333) * 0.3;
-                }
-                if (income3 > 500000) {
-                    tax += Math.min(300000, income3 - 500000) * 0.32;
-                }
-                if (income3 > 800000) {
-                    tax += Math.min(income3 - 800000) * 0.35;
-                }
-                return tax;                
-            }
+        <div id="amortizationTable"></div>
 
-            let taxAmount3 = calculatePayeTax(income3);
-            let houselevy = income3*0.015;
-            let deductions = houselevy + taxAmount3;
-            let payout3 = income3 - deductions;
-            console.log("Tax amount: ", taxAmount3);
+        <hr>
 
-            let result3 = "Gross Pay : " + income3.toLocaleString() + "<br>" +
-                         "Tax : " + taxAmount3.toLocaleString() + "<br>" +
-                         "House levy : " + houselevy.toLocaleString() + "<br>" +
-                        "Net Pay : " + payout3.toLocaleString() + "<br>"
+        <h1>Loan Limit Calculator</h1>
+        <label for="gross_pay">Gross Pay: </label>
+        <input type="number" id="gross_pay">
+        <br>
+        <label for="total_deductions">Total Deductions: </label>
+        <input type="number" id="total_deductions">
+        <br>
+        <label for="amount">Loan Amount: </label>
+        <input type="number" id="amount">
+        <br>
+        <label for="interest4">Interest Rate: </label>
+        <input type="number" id="interest4">
+        <br>
+        <button onclick="checkLoanLimit()">Calculate</button>
+        <br>
+        <div id="loanlimit"></div>
+    </div>
 
-            document.getElementById('totalpaye').innerHTML = result3;
-
-           
-        }
-
-        function loancalculator() {
-            let principal = parseFloat(document.getElementById("principle").value);
-            let payment_period = parseFloat(document.getElementById("payment_period").value);
-            let interest = parseFloat(document.getElementById("interest").value);
-            
-
-            let interestRate = interest/100;
-            
-            let monthlyPayment = Math.ceil((principal * (interestRate * Math.pow(1 + interestRate, payment_period))) / (Math.pow(1 + interestRate, payment_period) - 1));
-            console.log(monthlyPayment); // Rounds the result to 2 decimal places
-
-            let monthlyInterest = Math.ceil(principal * interestRate);
-            console.log(monthlyInterest);
-
-            let paid_pincipal = Math.floor(monthlyPayment - monthlyInterest);
-            console.log(paid_pincipal);
-
-            let principal_balance = Math.ceil(principal - paid_pincipal);
-            console.log(principal_balance);
-
-            let new_interest = Math.ceil(principal_balance * interestRate);
-            console.log(new_interest);
-
-            function calculateTotalInterest(principal, interestRate, monthlyPayment) {
-                const monthlyRate = interestRate; // Monthly interest rate
-                let balance = principal;
-                let totalInterest = 0;
-
-                while (balance > 0) {
-                    // Calculate interest for the month
-                    const interest = balance * monthlyRate;
-                    totalInterest += interest;
-
-                    // Calculate the principal portion of the payment
-                    const principalPayment = monthlyPayment - interest;
-                    
-                    // Update balance
-                    balance -= principalPayment;
-
-                    // If the balance is less than zero due to overpayment, set it to zero
-                    if (balance < 0) balance = 0;
-                }
-
-                return totalInterest;
-            }
-
-            const totalInterest = calculateTotalInterest(principal, interestRate, monthlyPayment);
-            let total_amount = principal+totalInterest;
-            let percent_interest = (totalInterest/principal)*100;
-            
-            let result4 = "Loan Particulars:<br>" +
-                         "Pricipal: " + principal.toLocaleString() + "<br>" +
-                         "Total Interest: " + Math.ceil(totalInterest).toLocaleString() + "<br>" +
-                         "Total Amount payable in "+ payment_period +" Months : " + Math.ceil(total_amount).toLocaleString() + "<br>" +
-                         "Monthly Installment: " + monthlyPayment.toLocaleString() + "<br>" +
-                         "Percent Interest paid in "+ payment_period +" Months : " + percent_interest.toFixed(2) + "%<br>";
-
-            document.getElementById('loanspecs').innerHTML = result4;   
-            
-            ////////////////////////////////////////ARMOTIZATION TABLE/////////////////////////////////////////
-
-            function armotizationTable() {
-                console.log("coming soon");                
-            }
-            result4 += '<button onclick="armotizationTable()">armotization table</button><br>';
-
-            ////////////////////////////////////////ARMOTIZATION TABLE/////////////////////////////////////////
-                
-
-        }
-
-        ////////////////////////////////////////loan limit/////////////////////////////////////////
-
-        function checkLoanLimit() {
-            // Parse the input values
-            let gross_pay = parseFloat(document.getElementById('gross_pay').value);
-            let total_deductions = parseFloat(document.getElementById('total_deductions').value);
-            let amount = parseFloat(document.getElementById('amount').value);
-            let interest4 = parseFloat(document.getElementById("interest4").value);
-
-            // Calculate remainder and percent remainder
-            let remainder = gross_pay - total_deductions;
-            let percent_remainder = (remainder / gross_pay) * 100;
-            let interestRate4 = interest4 / 100;
-            let loan_margin = 0; // Initialize loan_margin with a default value
-
-            // Declare variables for shortest repayment period and EMI
-            let s = null;
-            let e = null;
-
-            // Check if percent remainder is within the limit
-            if (percent_remainder <= 34) {
-                console.log("Percent Remainder:", percent_remainder);
-            } else {
-                loan_margin = (gross_pay * 0.66) - total_deductions;
-                console.log("Loan Margin:", loan_margin);
-
-                for (let payment_period4 = 6; payment_period4 < 96; payment_period4 += 6) {
-                    let emi = Math.ceil((amount * (interestRate4 * Math.pow(1 + interestRate4, payment_period4))) / (Math.pow(1 + interestRate4, payment_period4) - 1));
-
-                    if (emi < loan_margin) {
-                        s = payment_period4;
-                        e = emi;
-                        break; // Exit loop when a valid repayment period is found
-                    }
-                }
-            }
-
-            // Construct result string to display
-            let result5 = "Particulars:<br>" +
-                "Gross Pay: " + gross_pay.toLocaleString() + "<br>" +
-                "Total Deductions: " + total_deductions.toLocaleString() + "<br>" +
-                "Remainder: " + remainder.toLocaleString() + "<br>" +
-                "Percent Remainder: " + percent_remainder.toFixed(2) + "%<br>" +
-                "Loan Margin: " + Math.floor(loan_margin).toLocaleString() + "<br>";
-
-            // Conditionally add the repayment period and EMI to the result
-
-            let remainder5 = gross_pay-total_deductions-e;
-
-            if (s !== null && e !== null) {
-                result5 += "Shortest Repayment Period: " + s + " months<br>" +
-                        "Monthly Payment: " + Math.ceil(e).toLocaleString() + "<br>" +
-                        "Remander: " + Math.floor(remainder5).toLocaleString() + " <br>";
-            } else {
-                result5 += "Unable to find a suitable repayment period within limits.<br>";
-            }
-
-            // Display the result in the specified element
-            document.getElementById('loanlimit').innerHTML = result5;
-
-            // Return loan_margin for further processing, if needed
-            return loan_margin;
-        }
-
-        ////////////////////////////////////////loan limit/////////////////////////////////////////
-    </script>
-
+    <script src="scripts.js"></script>
 </body>
 </html>
