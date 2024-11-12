@@ -98,3 +98,43 @@ hr {
 #toggleTableBtn:hover {
     background-color: #004080;
 }
+
+/* Make the table container responsive */
+.amortization-table-container {
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+/* Style the amortization table */
+.amortization-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.amortization-table th,
+.amortization-table td {
+    padding: 8px 12px;
+    text-align: right;
+    border: 1px solid #ddd;
+}
+
+/* Header styles */
+.amortization-table th {
+    background-color: #0056b3;
+    font-weight: bold;
+}
+
+/* Zebra striping for rows */
+.amortization-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 600px) {
+    .amortization-table th,
+    .amortization-table td {
+        padding: 6px 8px;
+        font-size: 0.9em;
+    }
+}
+

@@ -95,12 +95,14 @@ function calculatepaye() {
     }
 
     const payeTax = calculatePayeTax(income3);
-    const netIncome = income3 - payeTax;
+    const houseLevy = income3 * 0.015;
+    const netIncome = income3 - payeTax - houseLevy;
 
     document.getElementById('totalpaye').innerHTML = `
         Total Income: ${income3.toLocaleString()}<br>
         PAYE Tax: ${payeTax.toLocaleString()}<br>
-        Net Income after PAYE: ${netIncome.toLocaleString()}
+        House Levy: ${houseLevy.toLocaleString()}<br>
+        Net Income after Taxes: ${netIncome.toLocaleString()}
     `;
 }
 
@@ -121,11 +123,14 @@ function loancalculator() {
     const monthlyPayment = (principle * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numPayments));
     const totalPayment = monthlyPayment * numPayments;
     const totalInterest = totalPayment - principle;
+    const percentPaidInterest = (totalInterest/principle)*100;
 
     document.getElementById('loanspecs').innerHTML = `
-        Monthly Payment: ${monthlyPayment.toFixed(2)}<br>
-        Total Payment Over Period: ${totalPayment.toFixed(2)}<br>
-        Total Interest Paid: ${totalInterest.toFixed(2)}
+        Principl: ${principle.toLocaleString()}<br>
+        Monthly Payment: ${Math.ceil(monthlyPayment).toLocaleString()}<br>
+        Total Payment Over ${numPayments} Months Period: ${Math.ceil(totalPayment).toLocaleString()}<br>
+        Total Interest Paid: ${Math.ceil(totalInterest).toLocaleString()}<br>
+        Percent Interest Paid: ${percentPaidInterest.toFixed(2)}%
     `;
 
     generateAmortizationTable(principle, monthlyPayment, monthlyInterestRate, numPayments);
@@ -136,31 +141,41 @@ function loancalculator() {
 
 function generateAmortizationTable(principle, monthlyPayment, monthlyInterestRate, numPayments) {
     let remainingBalance = principle;
-    let tableContent = `<table class="amortization-table">
-        <thead>
-            <tr><th>Payment #</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Balance</th></tr>
-        </thead>
-        <tbody>`;
+    let tableContent = `
+        <div class="amortization-table-container">
+            <table class="amortization-table">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Payment</th>
+                        <th>Principal</th>
+                        <th>Interest</th>
+                        <th>Remaining Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
 
-    for (let paymentNumber = 1; paymentNumber <= numPayments; paymentNumber++) {
+    for (let month = 1; month <= numPayments; month++) {
         const interestPayment = remainingBalance * monthlyInterestRate;
         const principalPayment = monthlyPayment - interestPayment;
         remainingBalance -= principalPayment;
 
         tableContent += `
             <tr>
-                <td>${paymentNumber}</td>
-                <td>${monthlyPayment.toFixed(2)}</td>
-                <td>${principalPayment.toFixed(2)}</td>
-                <td>${interestPayment.toFixed(2)}</td>
-                <td>${remainingBalance.toFixed(2)}</td>
+                <td>${month}</td>
+                <td>$${monthlyPayment.toFixed(2)}</td>
+                <td>$${principalPayment.toFixed(2)}</td>
+                <td>$${interestPayment.toFixed(2)}</td>
+                <td>$${remainingBalance.toFixed(2)}</td>
             </tr>
         `;
     }
 
-    tableContent += "</tbody></table>";
+    tableContent += "</tbody></table></div>";
     document.getElementById('amortizationTable').innerHTML = tableContent;
 }
+
 
 function toggleAmortizationTable() {
     const table = document.getElementById('amortizationTable');
@@ -187,15 +202,52 @@ function checkLoanLimit() {
         return;
     }
 
-    const netIncome = grossPay - totalDeductions;
-    const monthlyInterestRate = interestRate / 100 / 12;
-    const loanLimit = netIncome / monthlyInterestRate;
+    const remainder = grossPay - totalDeductions;
+    const percent_remainder = (remainder / grossPay) * 100;
+    const interestRate4 = interestRate / 100/12;
+    const netIncome_per = (remainder/grossPay)*100;
 
-    const isLoanApproved = loanAmount <= loanLimit;
+    let s = null;
+    let e = null;
+    let loan_margin = 0;
+
+    if (percent_remainder <= 34) {
+        document.getElementById('loanlimit').innerHTML += "Your loan limits is 0.<br>";
+    } else {
+        loan_margin = (grossPay * 0.66) - totalDeductions;
+        console.log("Loan Margin:", loan_margin);
+
+        for (let payment_period4 = 6; payment_period4 < 72; payment_period4 += 6) {
+            let emi = Math.ceil((loanAmount * (interestRate4 * Math.pow(1 + interestRate4, payment_period4))) / (Math.pow(1 + interestRate4, payment_period4) - 1));
+
+            if (emi < loan_margin) {
+                s = payment_period4;
+                e = emi;
+                break; // Exit loop when a valid repayment period is found
+            }
+        }
+        
+    }
+
 
     document.getElementById('loanlimit').innerHTML = `
-        Net Income: ${netIncome.toLocaleString()}<br>
-        Loan Limit: ${loanLimit.toFixed(2)}<br>
-        ${isLoanApproved ? 'Loan Approved' : 'Loan Denied'}
+        Gross Pay: ${grossPay.toLocaleString()}<br>
+        Total Deductions: ${totalDeductions.toLocaleString()}<br>
+        Net Income: ${remainder.toLocaleString()}<br>
+        Net Income Percent: ${netIncome_per.toFixed(2)}%<br>
+        Available funds: ${Math.floor(loan_margin).toLocaleString()}<br>
     `;
+
+    let remainder5 = grossPay-totalDeductions-e;
+
+        if (s !== null && e !== null) {
+            document.getElementById('loanlimit').innerHTML += "Shortest Repayment Period: " + s + " months<br>" +
+                    "Monthly Payment: " + Math.ceil(e).toLocaleString() + "<br>" +
+                    "Remander: " + Math.floor(remainder5).toLocaleString() + " <br>";
+        } else {
+            document.getElementById('loanlimit').innerHTML += "Unable to find a suitable repayment period within limits.<br>";
+        }
+
+    
+
 }
