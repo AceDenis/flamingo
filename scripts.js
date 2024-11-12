@@ -147,7 +147,7 @@ function generateAmortizationTable(principle, monthlyPayment, monthlyInterestRat
                 <thead>
                     <tr>
                         <th>Month</th>
-                        <th>Payment</th>
+                        <th>Beginning Balance</th>
                         <th>Principal</th>
                         <th>Interest</th>
                         <th>Remaining Balance</th>
@@ -157,6 +157,7 @@ function generateAmortizationTable(principle, monthlyPayment, monthlyInterestRat
     `;
 
     for (let month = 1; month <= numPayments; month++) {
+        const beginningBalance = remainingBalance;
         const interestPayment = remainingBalance * monthlyInterestRate;
         const principalPayment = monthlyPayment - interestPayment;
         remainingBalance -= principalPayment;
@@ -164,12 +165,21 @@ function generateAmortizationTable(principle, monthlyPayment, monthlyInterestRat
         tableContent += `
             <tr>
                 <td>${month}</td>
-                <td>$${monthlyPayment.toFixed(2)}</td>
-                <td>$${principalPayment.toFixed(2)}</td>
-                <td>$${interestPayment.toFixed(2)}</td>
-                <td>$${remainingBalance.toFixed(2)}</td>
+                 <td>$${beginningBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td>$${interestPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td>$${principalPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td>$${remainingBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             </tr>
         `;
+
+        if (month % 12 === 0) {
+            tableContent += `
+             <tr>
+                <td colspan="5" style="text-align: center; font-weight: bold;">Year #${month / 12} End</td>
+             </tr>
+            `;
+            
+        }
     }
 
     tableContent += "</tbody></table></div>";
