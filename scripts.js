@@ -227,7 +227,7 @@ function checkLoanLimit() {
         loan_margin = (grossPay * 0.66) - totalDeductions;
         console.log("Loan Margin:", loan_margin);
 
-        for (let payment_period4 = 6; payment_period4 <= 72; payment_period4 += 6) {
+        for (let payment_period4 = 6; payment_period4 < 73; payment_period4 += 6) {
             let emi = Math.ceil((loanAmount * (interestRate4 * Math.pow(1 + interestRate4, payment_period4))) / (Math.pow(1 + interestRate4, payment_period4) - 1));
 
             if (emi < loan_margin) {
@@ -261,4 +261,5 @@ function checkLoanLimit() {
     
 
 }
+
 
